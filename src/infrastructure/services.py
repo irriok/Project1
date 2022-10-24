@@ -1,5 +1,8 @@
 # Code in here
 
-# EmailService
-# SlackService
-# LoggerService
+# class EmailService:
+#
+# class SlackService:
+#
+# class LoggerService:
+#

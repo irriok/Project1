@@ -1,5 +1,5 @@
 from ..core.interfaces import BaseMessengerServiceProvider
-
+from services import EmailService, SlackService, LoggerService
 
 # Code in here
 class SlackMessengerProvider(BaseMessengerServiceProvider):

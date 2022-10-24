@@ -6,4 +6,5 @@ class APIView(flask.views.MethodView):
 
     def post(self, request):
         controller = APIController()
-        controller.process_event(request)
+        file = 'request.json'
+        controller.process_event(request, file)
