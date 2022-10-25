@@ -1,5 +1,5 @@
 {
-  "type": "new_publication",
-  "body": "some text",
-  "to": "channelID"
+  "type": "approved_publication",
+  "body": "Hello There!",
+  "to": "irenoqminyan@gmail.com"
 }

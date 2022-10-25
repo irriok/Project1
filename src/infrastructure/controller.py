@@ -1,40 +1,70 @@
 import json
-import config
-from repositories import ConfigRepo
+from . import config
+from .repositories import ConfigRepo
+from .services import SlackService, EmailService
+from .providers import SlackServiceProvider, EmailServiceProvider
+
 
 class BaseController:
 
-    def __init__(self, slack_service, email_service, logger_service, env_repo, email_service_provider,
-                 messenger_service_provider, logger_service_provider):
-        self._slack_service = slack_service
-        self._email_service = email_service
-        self._logger_service = logger_service
-        self._env_repo = env_repo
-        self._email_service_provider = email_service_provider
-        self._messenger_service_provider = messenger_service_provider
-        self._logger_service_provider = logger_service_provider
+    def __init__(self):
+        self._slack_service = None
+        self._slack_service_provider = None
+        self._email_service = None
+        self._email_service_provider = None
+        self._logger_service = None
+        self._logger_service_provider = None
+        self._env_repo = ConfigRepo()
 
-    def env_repo(self):
-        return ConfigRepo
 
+    @property
     def logger_service(self):
-        return LoggerService
+        if self._logger_service is None:
+            self._logger_service = LoggerService()
+        return self._logger_service
 
+    @property
     def logger_service_provider(self):
-        return LoggerServiceProvider
+        if self._logger_service_provider is None:
+            self._logger_service_provider = LoggerServiceProvider(self._logger_service)
+        return "a"
 
+    @property
     def email_service(self):
-        if _email_service is None:
-            api_key = self._env_repo.get_one(config.EMAIL_SECRET_KEY)
+        if self._email_service is None:
+            host = self._env_repo.get_one(config.EMAIL_HOST)
+            port = self._env_repo.get_one(config.EMAIL_PORT)
+            self._email_service = EmailService(host, port)
+            # self._email_service = EmailService(self.logger_provider, api_key, secret_key)
 
-    def emailservice_provider(self):
-        return EmailServiceProvider
+        return self._email_service
 
+    @property
+    def email_service_provider(self):
+        if self._email_service_provider is None:
+            api_key = self._env_repo.get_one(config.EMAIL_API_KEY)
+            secret_key = self._env_repo.get_one(config.EMAIL_SECRET_KEY)
+            sender = self._env_repo.get_one(config.EMAIL_SENDER)
+            # self._email_service_provider = EmailServiceProvider(self._logger_service_provider, self.email_service)
+            self._email_service_provider = EmailServiceProvider(self.email_service, api_key, secret_key, sender)
+        return self._email_service_provider
+
+    @property
     def slack_service(self):
-        return SlackService
+        if self._slack_service is None:
+            token = self._env_repo.get_one(config.SLACK_TOKEN)
+            self._slack_service = SlackService(token)
+            # self._slack_service = SlackService(self.logger_provider, token)
+        return self._slack_service
 
-    def slack__service_provider(self):
-        return SlackServiceProvider
+
+    @property
+    def slack_service_provider(self):
+        if self._slack_service_provider is None:
+            # self._slack_service_provider = SlackServiceProvider(self._logger_service_provider, self._slack_service)
+            self._slack_service_provider = SlackServiceProvider(self.slack_service)
+        return self._slack_service_provider
+
 
 
 class APIController(BaseController):
@@ -42,6 +72,6 @@ class APIController(BaseController):
     @staticmethod
     def process_event(file):
         with open(file) as f:
-            data = json.load(f)
+            return json.load(f)
 
 

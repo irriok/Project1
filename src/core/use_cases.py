@@ -10,9 +10,9 @@ class BaseUseCase(ABC):
 
 class NotifierUseCase(BaseUseCase):
 
+    def __init__(self):
+        pass
     # Code in here
     def execute(self):
         pass
 
-    def __init__(self):
-        pass

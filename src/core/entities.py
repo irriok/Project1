@@ -2,11 +2,13 @@ from typing import Optional
 
 
 class EnvItemEntity:
-    key = str
-    value: str
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
 
 
 class EventEntity:
-    event_type: str  # choices: [new_publication, approved_publication]
-    body: str
-    to: Optional[str]
+    def __init__(self, type, to, text):
+        self.type = type
+        self.to = to
+        self.text = text
