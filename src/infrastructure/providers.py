@@ -13,14 +13,16 @@ class EmailServiceProvider(BaseEmailServiceProvider):
         self.sender = sender
 
     def send_email(self, body, to):
-        service = self.service.get_client()
-        print(service)
-        # with service as server:
-        #     server.login(self.api_key, self.secret_key)
-        #     server.sendmail(self.sender, to, body)
-        #     print('send_email')
-        #     print(server.sendmail(self.sender, to, body))
-        print('email works')
+        try:
+            service = self.service.get_client()
+            with service as server:
+                server.login(self.api_key, self.secret_key)
+                server.sendmail(self.sender, to, body)
+                print('send_email')
+                print(server.sendmail(self.sender, to, body))
+            return self.logger.info("Message sent to email!")
+        except:
+            return self.logger.error("Message was not sent via email")
 
 
 
@@ -30,12 +32,15 @@ class SlackServiceProvider(BaseMessengerServiceProvider):
         self.service = service
 
     def send_message(self, body, to):
-        client = self.service.get_client()
-        # client.chat_postMessage(
-        #     channel=to,
-        #     text=body
-        # )
-        print('slack works')
+        try:
+            client = self.service.get_client()
+            # client.chat_postMessage(
+            #     channel=to,
+            #     text=body
+            # )
+            return self.logger.info("Message sent via slack!")
+        except:
+            return self.logger.info("Message was not sent via slack")
 
 
 class LoggerServiceProvider(BaseLoggerProvider):

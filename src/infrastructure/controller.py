@@ -20,7 +20,7 @@ class BaseController:
     @property
     def logger_service(self):
         if self._logger_service is None:
-            self._logger_service = LoggerService()
+            self._logger_service = LoggerService().logger
         return self._logger_service
 
     @property
@@ -49,7 +49,7 @@ class BaseController:
     @property
     def slack_service(self):
         if self._slack_service is None:
-            token = self._env_repo.get_one(config.SLACK_TOKEN)
+            token = self._env_repo.get_one(config.SLACK_TOKEN).value
             self._slack_service = SlackService(self.logger_service, token)
         return self._slack_service
 
@@ -57,7 +57,7 @@ class BaseController:
     @property
     def slack_service_provider(self):
         if self._slack_service_provider is None:
-            self._slack_service_provider = SlackServiceProvider(self.logger_service_provider, self._slack_service)
+            self._slack_service_provider = SlackServiceProvider(self.logger_service_provider, self.slack_service)
         return self._slack_service_provider
 
 

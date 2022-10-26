@@ -25,8 +25,11 @@ class SlackService:
 class LoggerService:
     # Create and configure logger
     def __init__(self):
-        self.logger = logging.basicConfig(filename="newfile.log",
+        logging.basicConfig(filename="src/logfile.log",
                             format='%(asctime)s %(message)s',
                             filemode='w')
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        self.logger = logger
 
 

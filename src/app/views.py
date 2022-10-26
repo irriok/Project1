@@ -10,7 +10,7 @@ class APIView(MethodView):
     def post(self):
         controller = APIController()
         file = os.path.abspath('src/app/request.json')
-        controller.process_event(file)
+        return controller.process_event(file)
 
 
 
