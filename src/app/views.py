@@ -11,14 +11,3 @@ class APIView(MethodView):
         controller = APIController()
         file = os.path.abspath('src/app/request.json')
         return controller.process_event(file)
-
-
-
-
-# //
-# //{
-# //  "type": "new_publication",
-# //  "body": "Hello There!",
-# //  "to": "C0447N114NP"
-# //}
-
