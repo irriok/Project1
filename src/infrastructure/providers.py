@@ -1,41 +1,56 @@
-from ..core.interfaces import BaseMessengerServiceProvider, BaseEmailServiceProvider
+from ..core.interfaces import BaseMessengerServiceProvider, BaseEmailServiceProvider, BaseLoggerProvider
 from .services import EmailService, SlackService, LoggerService
 import smtplib
 
 
 # Code in here
 class EmailServiceProvider(BaseEmailServiceProvider):
-    def __init__(self, service, api_key, secret_key, sender):
-        # self.logger = logger
+    def __init__(self, logger, service, api_key, secret_key, sender):
+        self.logger = logger
         self.service = service
         self.api_key = api_key
         self.secret_key = secret_key
         self.sender = sender
 
-    def send_email(self, text, to):
+    def send_email(self, body, to):
         service = self.service.get_client()
         print(service)
-        with service as server:
-            server.login(self.api_key, self.secret_key)
-            server.sendmail(self.sender, to, text)
-            print('send_email')
-            print(server.sendmail(self.sender, to, text))
+        # with service as server:
+        #     server.login(self.api_key, self.secret_key)
+        #     server.sendmail(self.sender, to, body)
+        #     print('send_email')
+        #     print(server.sendmail(self.sender, to, body))
+        print('email works')
 
 
 
 class SlackServiceProvider(BaseMessengerServiceProvider):
-    def __init__(self, service):
-    # def __init__(self, logger, service):
-    #     self.logger = logger
+    def __init__(self, logger, service):
+        self.logger = logger
         self.service = service
 
-    def send_message(self, text, to):
+    def send_message(self, body, to):
         client = self.service.get_client()
-        response = client.chat_postMessage(
-            channel=to,
-            text=text
-        )
+        # client.chat_postMessage(
+        #     channel=to,
+        #     text=body
+        # )
+        print('slack works')
 
-class LoggerServiceProvider(BaseMessengerServiceProvider):
-    #LoggerService
-    pass
+
+class LoggerServiceProvider(BaseLoggerProvider):
+
+    def __init__(self, logger):
+        self.logger = logger
+
+    def info(self, message):
+        return self.logger.info(message)
+
+    def warning(self, message):
+        return self.logger.warning(message)
+
+    def error(self, message):
+        return self.logger.error(message)
+
+    def critical(self, message):
+        return self.logger.critical(message)
